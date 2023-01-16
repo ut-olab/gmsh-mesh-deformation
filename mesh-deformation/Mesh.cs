@@ -85,7 +85,7 @@ namespace mesh_deformation
             for (int i = 0; i < nodes.Length / 3; i++)
             {
                 var oriXYZ = new float[] { nodes[i * 3 + 0], nodes[i * 3 + 1], nodes[i * 3 + 2], 1f };
-                var updatedXYZ = HairetsuExtensions.MatrixVector(matrixs[1], oriXYZ);
+                var updatedXYZ = HairetsuExtensions.MultipleMatVec(matrixs[1], oriXYZ);
                 this.UpdatedNodes[i * 3 + 0] = updatedXYZ[0];
                 this.UpdatedNodes[i * 3 + 1] = updatedXYZ[1];
                 this.UpdatedNodes[i * 3 + 2] = updatedXYZ[2];

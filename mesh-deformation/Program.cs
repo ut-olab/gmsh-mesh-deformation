@@ -78,8 +78,8 @@ namespace mesh_deformation
                 {7, 8, 9 }
             };
             var vec = new float[] { 1, 2, 3 };
-            var res = HairetsuExtensions.MatrixVector(mat, vec);
-            res.Pirnt();
+            var res = HairetsuExtensions.MultipleMatVec(mat, vec);
+            res.PrintVec();
         }
     }
 }

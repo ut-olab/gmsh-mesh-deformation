@@ -20,7 +20,7 @@ namespace mesh_deformation
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="mat"></param>
-        public static void Print<T>(
+        public static void PrintMat<T>(
             this T[,] mat
             )
         {
@@ -35,7 +35,7 @@ namespace mesh_deformation
                 Debug.WriteLine("");
             }
         }
-        public static void Pirnt<T>(
+        public static void PrintVec<T>(
             this T[] vec
             )
         {
@@ -47,7 +47,7 @@ namespace mesh_deformation
         }
 
         
-        public static T[,] Add<T>(
+        public static T[,] AddMat<T>(
             T[,] matA,
             T[,] matB
             )
@@ -65,7 +65,7 @@ namespace mesh_deformation
             return matRes;
         }
 
-        public static T[,] MatrixMatrix<T>(
+        public static T[,] MultipleMatMat<T>(
             T[,] matA,
             T[,] matB
             )
@@ -104,7 +104,7 @@ namespace mesh_deformation
         //    return matRes;
         //}
 
-        public static T[] MatrixVector<T>(
+        public static T[] MultipleMatVec<T>(
             T[,] mat,
             T[] vec
             )

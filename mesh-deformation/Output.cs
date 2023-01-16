@@ -26,7 +26,7 @@ namespace mesh_deformation
                 fileName = $@"{folder}" + @"/" + "model-after.msh";
                 Console.WriteLine($"{fileName}");
             }
-            else if (thisOs == "windows")
+            else if (thisOs == "Win32NT")
             {
                 folder = $@"{dirPath}";
                 fileName = $@"{folder}" + @"\" + "model-after.msh";

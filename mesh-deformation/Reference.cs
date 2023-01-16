@@ -111,7 +111,7 @@ namespace mesh_deformation
             }
             foreach (var mat in this.Matrixs)
             {
-                mat.Print();
+                mat.PrintMat();
             }
         }
     }
