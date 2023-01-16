@@ -5,8 +5,8 @@
 # 使っているもの
 
 - gmsh
+  - [gmsh のサイト](https://gmsh.info/#Links)
   - [gitlab にあるソースコード](https://gitlab.onelab.info/gmsh/gmsh)
-  - `git clone`したものが、このレポジトリの[gmsh](./gmsh)にある
 - 自作コード（c#）
 
 ## Basic Installation
@@ -45,3 +45,8 @@
   pip        22.3
   setuptools 65.5.0
   ```
+
+## tutorial
+
+- [python サンプルコードがいっぱいある場所](./gmsh-4.11.1-Windows64/tutorials/python)
+- これを一個ずつ試して行けば大体やっていることはわかる
