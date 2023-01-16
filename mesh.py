@@ -37,7 +37,7 @@ def ShapeCreation():
 
 def NamingBoundary():
     gmsh.model.addPhysicalGroup(2, [1], 10)
-    gmsh.model.setPhysicalName(2, 10, name = "My surface")
+    gmsh.model.setPhysicalName(2, 10, name = "surface")
     Syncronize()
 
 def Meshing():
