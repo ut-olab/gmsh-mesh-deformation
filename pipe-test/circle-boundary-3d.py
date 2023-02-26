@@ -28,9 +28,9 @@ gmsh.option.setNumber("General.Terminal", 1)
 radius = 0.5
 length = 1.0
 numberOfTest = 10
-N = 5
+N = 9
 r = 1.2
-d = [-0.01]
+d = [-0.02]
 for i in range(1, N):
     d.append(d[-1] - (-d[0]) * r ** i)
 
@@ -52,16 +52,19 @@ gmsh.model.geo.addCircleArc(startTag=4, centerTag=center, endTag=1, tag=8)
 test = [(1, 5), (1, 6), (1, 7), (1, 8)]
 gmsh.model.geo.extrude(test, dx=0, dy=0, dz=length)
 
-gmsh.model.geo.synchronize()
 
-s = gmsh.model.getEntities(2)
-print(s)
+gmsh.model.geo.synchronize()
 
 extbl = gmsh.model.geo.extrudeBoundaryLayer(gmsh.model.getEntities(2), [1] * N, d, True)
 print(extbl)
 
 gmsh.model.geo.synchronize()
 
+# 46 68 90 112
+# test = [48, 68, 90, 112]
+# gmsh.model.geo.addSurfaceLoop(test, 10)
+# s = gmsh.model.getEntities(3)
+# print("s = ", s)
 
 # ここよくわからんな
 top = []
@@ -70,27 +73,42 @@ for i in range(1, len(extbl)):
     if extbl[i][0] == 3:
         top.append(extbl[i - 1])
 
-bnd = gmsh.model.getBoundary(top)
-print("top = ", top)
-print("bnd = ", bnd)
-cl2 = gmsh.model.geo.addCurveLoop([c[1] for c in bnd])
-print("cl2 = ", cl2)
+# bnd = gmsh.model.getBoundary(top)
+# print("top = ", top)
+# print("bnd = ", bnd)
+# cl2 = gmsh.model.geo.addCurveLoop([c[1] for c in bnd])
+# print("cl2 = ", cl2)
 # s2 = gmsh.model.geo.addPlaneSurface([cl2])
 # sl = gmsh.model.geo.addSurfaceLoop([s2])
 # print("s2 = ", s2)
+
 # v = gmsh.model.geo.addVolume([sl])
 
+gmsh.model.geo.addCurveLoop([26, 48, 70, 92], 201)
+gmsh.model.geo.addPlaneSurface([201], 201)
+gmsh.model.geo.addCurveLoop([28, 50, 72, 94], 202)
+gmsh.model.geo.addPlaneSurface([202], 202)
+# 46 68 90 112
+gmsh.model.geo.addSurfaceLoop([46, 68, 90, 112, 201, 202], 300)
+gmsh.model.geo.addVolume([300], 300)
+# gmsh.model.geo.addVolume(46, 68, 90, 112, 201, 202)
 gmsh.model.geo.synchronize()
 
 l = gmsh.model.getEntities(1)
 for i in l:
-    # print(i)
-    gmsh.model.mesh.setTransfiniteCurve(tag=i[1], numNodes=21, meshType="Progression", coef=1.0)
+    gmsh.model.mesh.setTransfiniteCurve(tag=i[1], numNodes=11, meshType="Progression", coef=1.0)
+
+gmsh.model.mesh.setTransfiniteCurve(tag=26, numNodes=11, meshType="Progression", coef=1.0)
+gmsh.model.mesh.setTransfiniteCurve(tag=48, numNodes=11, meshType="Progression", coef=1.0)
+gmsh.model.mesh.setTransfiniteCurve(tag=70, numNodes=11, meshType="Progression", coef=1.0)
+gmsh.model.mesh.setTransfiniteCurve(tag=92, numNodes=11, meshType="Progression", coef=1.0)
 
 gmsh.model.mesh.setTransfiniteSurface(tag=12)
 gmsh.model.mesh.setTransfiniteSurface(tag=16)
 gmsh.model.mesh.setTransfiniteSurface(tag=20)
 gmsh.model.mesh.setTransfiniteSurface(tag=24)
+# gmsh.model.mesh.setTransfiniteSurface(tag=201)
+# gmsh.model.mesh.setTransfiniteSurface(tag=202)
 gmsh.model.mesh.setRecombine(dim=2, tag=12)
 gmsh.model.mesh.setRecombine(dim=2, tag=16)
 gmsh.model.mesh.setRecombine(dim=2, tag=20)
@@ -102,8 +120,8 @@ gmsh.model.mesh.generate(3)
 print("finish meshing")
 
 gmsh.option.setNumber("Mesh.MshFileVersion", 2.2)
-gmsh.write("circle.msh")
-gmsh.write("circle.vtk")
+gmsh.write("circle-boundary-3d.msh")
+gmsh.write("circle-boundary-3d.vtk")
 
 if '-nopopup' not in sys.argv:
     gmsh.fltk.run()
