@@ -25,20 +25,17 @@ gmsh.option.setNumber("General.RotationZ", 0)
 gmsh.option.setNumber("General.Terminal", 1)
 
 radius = 0.5
-length = 1.0
-numberOfTest = 10
+lengthLongitudinal = 1.0
+
+divideRadius = 31
+divideArc = 15
+divideLongitudinal = lengthLongitudinal / 0.05
 
 center = gmsh.model.geo.addPoint(x=0,y=0,z=0,tag=0)
 gmsh.model.geo.addPoint(x=math.cos(math.pi*0)*radius, y=math.sin(math.pi*0)*radius, z=0, tag=1)
 gmsh.model.geo.addPoint(x=math.cos(math.pi/2)*radius, y=math.sin(math.pi/2)*radius, z=0, tag=2)
 gmsh.model.geo.addPoint(x=math.cos(math.pi*1)*radius, y=math.sin(math.pi*1)*radius, z=0, tag=3)
 gmsh.model.geo.addPoint(x=math.cos(math.pi*3/2)*radius, y=math.sin(math.pi*3/2) * radius, z=0, tag=4)
-
-gmsh.model.geo.addPoint(x=math.cos(math.pi*0)*radius, y=math.sin(math.pi*0)*radius, z=length, tag=5)
-gmsh.model.geo.addPoint(x=math.cos(math.pi/2)*radius, y=math.sin(math.pi/2)*radius, z=length, tag=6)
-gmsh.model.geo.addPoint(x=math.cos(math.pi*1)*radius, y=math.sin(math.pi*1)*radius, z=length, tag=7)
-gmsh.model.geo.addPoint(x=math.cos(math.pi*3/2)*radius, y=math.sin(math.pi*3/2) * radius, z=length, tag=8)
-
 
 gmsh.model.geo.addLine(startTag=center, endTag=1, tag=1)
 gmsh.model.geo.addLine(startTag=center, endTag=2, tag=2)
@@ -60,14 +57,10 @@ gmsh.model.geo.addPlaneSurface([4], 4)
 
 gmsh.model.geo.synchronize()
 
-s = gmsh.model.getEntities(2)
-print(s)
-# exit()
-
-ov = gmsh.model.geo.extrude(dimTags=[(2, 1)], dx=0, dy=0, dz=length, numElements=[numberOfTest], heights=[1])
-ov = gmsh.model.geo.extrude(dimTags=[(2, 2)], dx=0, dy=0, dz=length, numElements=[numberOfTest], heights=[1])
-ov = gmsh.model.geo.extrude(dimTags=[(2, 3)], dx=0, dy=0, dz=length, numElements=[numberOfTest], heights=[1])
-ov = gmsh.model.geo.extrude(dimTags=[(2, 4)], dx=0, dy=0, dz=length, numElements=[numberOfTest], heights=[1])
+ov = gmsh.model.geo.extrude(dimTags=[(2, 1)], dx=0, dy=0, dz=lengthLongitudinal, numElements=[divideLongitudinal], heights=[1], recombine=True)
+ov = gmsh.model.geo.extrude(dimTags=[(2, 2)], dx=0, dy=0, dz=lengthLongitudinal, numElements=[divideLongitudinal], heights=[1], recombine=True)
+ov = gmsh.model.geo.extrude(dimTags=[(2, 3)], dx=0, dy=0, dz=lengthLongitudinal, numElements=[divideLongitudinal], heights=[1], recombine=True)
+ov = gmsh.model.geo.extrude(dimTags=[(2, 4)], dx=0, dy=0, dz=lengthLongitudinal, numElements=[divideLongitudinal], heights=[1], recombine=True)
 
 gmsh.model.geo.synchronize()
 
@@ -76,26 +69,54 @@ gmsh.model.mesh.setRecombine(dim=2, tag=2)
 gmsh.model.mesh.setRecombine(dim=2, tag=3)
 gmsh.model.mesh.setRecombine(dim=2, tag=4)
 
-gmsh.model.mesh.setTransfiniteCurve(tag=1, numNodes=21, meshType="Progression", coef=0.98)
-gmsh.model.mesh.setTransfiniteCurve(tag=2, numNodes=21, meshType="Progression", coef=0.98)
-gmsh.model.mesh.setTransfiniteCurve(tag=3, numNodes=21, meshType="Progression", coef=0.98)
-gmsh.model.mesh.setTransfiniteCurve(tag=4, numNodes=21, meshType="Progression", coef=0.98)
-gmsh.model.mesh.setTransfiniteCurve(tag=5, numNodes=11, meshType="Progression", coef=1.0)
-gmsh.model.mesh.setTransfiniteCurve(tag=6, numNodes=11, meshType="Progression", coef=1.0)
-gmsh.model.mesh.setTransfiniteCurve(tag=7, numNodes=11, meshType="Progression", coef=1.0)
-gmsh.model.mesh.setTransfiniteCurve(tag=8, numNodes=11, meshType="Progression", coef=1.0)
+gmsh.model.mesh.setTransfiniteCurve(tag=1, numNodes=divideRadius, meshType="Progression", coef=0.98)
+gmsh.model.mesh.setTransfiniteCurve(tag=2, numNodes=divideRadius, meshType="Progression", coef=0.98)
+gmsh.model.mesh.setTransfiniteCurve(tag=3, numNodes=divideRadius, meshType="Progression", coef=0.98)
+gmsh.model.mesh.setTransfiniteCurve(tag=4, numNodes=divideRadius, meshType="Progression", coef=0.98)
+gmsh.model.mesh.setTransfiniteCurve(tag=5, numNodes=divideArc, meshType="Progression", coef=1.0)
+gmsh.model.mesh.setTransfiniteCurve(tag=6, numNodes=divideArc, meshType="Progression", coef=1.0)
+gmsh.model.mesh.setTransfiniteCurve(tag=7, numNodes=divideArc, meshType="Progression", coef=1.0)
+gmsh.model.mesh.setTransfiniteCurve(tag=8, numNodes=divideArc, meshType="Progression", coef=1.0)
 gmsh.model.mesh.setTransfiniteSurface(tag=1)
 gmsh.model.mesh.setTransfiniteSurface(tag=2)
 gmsh.model.mesh.setTransfiniteSurface(tag=3)
 gmsh.model.mesh.setTransfiniteSurface(tag=4)
 # gmsh.model.mesh.setTransfiniteVolume(tag=1)
 
+inlet = [1, 2, 3, 4]
+gmsh.model.addPhysicalGroup(2, inlet, 11)
+gmsh.model.setPhysicalName(2, 11, "INLET")
+
+outlet = [25, 42, 59, 76]
+gmsh.model.addPhysicalGroup(2, outlet, 12)
+gmsh.model.setPhysicalName(2, 12, "OUTLET")
+
+surface = [20, 37, 54, 71]
+gmsh.model.addPhysicalGroup(2, surface, 10)
+gmsh.model.setPhysicalName(2, 10, "SURFACE")
+# surfaces = gmsh.model.getEntities(2)
+# print(surfaces)
+# surfacesList = []
+# for i in range(len(surfaces)):
+#     surfacesList.append(surfaces[i][1])
+# surface_another = list(set(surfacesList) - set(inlet) - set(outlet))
+# gmsh.model.addPhysicalGroup(2, surface_another, 10)
+# gmsh.model.setPhysicalName(2, 10, "SURFACE")
+
+
+volumes = gmsh.model.getEntities(3)
+volumesList = []
+for i in range(len(volumes)):
+    volumesList.append(volumes[i][1])
+gmsh.model.addPhysicalGroup(3, volumesList, 100)
+gmsh.model.setPhysicalName(3, 100, "INTERNAL")
+
 gmsh.model.mesh.generate(3)
 print("finish meshing")
 
 gmsh.option.setNumber("Mesh.MshFileVersion", 2.2)
-gmsh.write("circle.msh")
-gmsh.write("circle.vtk")
+gmsh.write("pipe-structured.msh")
+gmsh.write("pipe-structured.vtk")
 
 if '-nopopup' not in sys.argv:
     gmsh.fltk.run()

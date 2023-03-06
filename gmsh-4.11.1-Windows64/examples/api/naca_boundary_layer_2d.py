@@ -10,7 +10,7 @@ gmsh.model.add("NACA 0012")
 incidence = -math.pi / 18.;
 
 # create the boundary layer by extrusion, or as a mesh constraint?
-by_extrusion = False
+by_extrusion = True
 
 # rounded trailing edge?
 rounded = True
@@ -85,9 +85,10 @@ if by_extrusion:
     print(d)
     extbl = gmsh.model.geo.extrudeBoundaryLayer(gmsh.model.getEntities(1),
                                                 [1] * N, d, True)
-
+    print(extbl)
     # create curve loop with "top" curves of the boundary layer
     cl2 = gmsh.model.geo.addCurveLoop([c[1] for c in extbl[::2]])
+    print(cl2)
 
     # connect it with the exterior surface
     p1 = gmsh.model.geo.addPoint(-1, -1, 0, lc2)

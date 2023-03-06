@@ -11,11 +11,11 @@ namespace mesh_deformation
 {
     public class Output
     {
-        public Output(Mesh mesh, string dirPath, string thisOs) {
-            OutputMesh(mesh, dirPath, thisOs);
+        public Output(Mesh mesh, string dirPath, string thisOs, Reference reference) {
+            OutputMesh(mesh, dirPath, thisOs, reference);
         }
 
-        private void OutputMesh(Mesh mesh, string dirPath, string thisOs)
+        private void OutputMesh(Mesh mesh, string dirPath, string thisOs, Reference reference)
         {
             Debug.WriteLine($"{dirPath}");
             string folder = "";
@@ -37,14 +37,25 @@ namespace mesh_deformation
                 sw.WriteLine("2.2 0 8");
                 sw.WriteLine("$EndMeshFormat");
                 sw.WriteLine("$PhysicalNames");
-                sw.WriteLine($"1");
+                sw.WriteLine($"{mesh.PhysicalInfos.Count}");
+                foreach (var physical in mesh.PhysicalInfos)
+                {
+                    if (physical.PhysicalName == "INTERNAL")
+                    {
+                        sw.WriteLine($"3 {physical.PhysicalID} \"{physical.PhysicalName}\"");
+                    } 
+                    else
+                    {
+                        sw.WriteLine($"2 {physical.PhysicalID} \"{physical.PhysicalName}\"");
+                    }
+                }
                 sw.WriteLine($"2 10 \"surface\"");
                 sw.WriteLine("$EndPhysicalNames");
                 sw.WriteLine("$Nodes");
-                sw.WriteLine($"{mesh.UpdatedNodes.Length / 3}");
-                for (int i = 0; i < mesh.UpdatedNodes.Length / 3; i++)
+                sw.WriteLine($"{reference.NodeMoved.Length}");
+                for (int i = 0; i < reference.NodeMoved.Length; i++)
                 {
-                    sw.WriteLine($"{i + 1} {mesh.UpdatedNodes[(i * 3) + 0].ToString()} {mesh.UpdatedNodes[(i * 3) + 1].ToString()} {mesh.UpdatedNodes[(i * 3) + 2].ToString()}");
+                    sw.WriteLine($"{i + 1} {reference.NodeMoved[i].X.ToString()} {reference.NodeMoved[i].Y.ToString()} {reference.NodeMoved[i].Z.ToString()}");
                 }
                 sw.WriteLine("$EndNodes");
                 sw.WriteLine("$Elements");

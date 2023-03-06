@@ -5,7 +5,7 @@ import sys
 
 gmsh.initialize(sys.argv)
 
-nturns = 2 # tested ok up to 100
+nturns = 5 # tested ok up to 100
 
 npts = 100 * nturns
 r = 1.
@@ -14,8 +14,7 @@ h = 1. * nturns
 
 for i in range(npts):
   theta = i * 2. * math.pi * nturns / npts
-  gmsh.model.occ.addPoint(r * math.cos(theta), r * math.sin(theta),
-                          i * h / npts, i+1)
+  gmsh.model.occ.addPoint(r * math.cos(theta), r * math.sin(theta), i * h / npts, i + 1)
 
 gmsh.model.occ.addSpline(range(1, npts), 1)
 gmsh.model.occ.addWire([1], 1)

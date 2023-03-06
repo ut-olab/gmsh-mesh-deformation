@@ -18,6 +18,7 @@ namespace mesh_deformation
         Triangle = 2,
         Quadrilateral = 3,
         Tetrahedron = 4,
+        Hexahedron = 5,
         Prism = 6
     }
 }

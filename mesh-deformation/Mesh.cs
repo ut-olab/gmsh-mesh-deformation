@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,8 +10,8 @@ namespace mesh_deformation
 {
     public class Mesh
     {
-        public float[] Nodes { get; set; }
-        public float[] UpdatedNodes { get; set; }
+        public Node[] NodesOrigin { get; set; }
+        public Node[] NodesMoved { get; set; }
         public Cell[] Cells { get; set; }
         
         public List<PhysicalInfo> PhysicalInfos { get; set; }
@@ -18,7 +19,7 @@ namespace mesh_deformation
 
         public Mesh(string[] lines)
         {
-            (this.Nodes, var cellsJugArray, this.PhysicalInfos) = InterpretLinesOnMesh(lines);
+            (var cellsJugArray, this.PhysicalInfos) = ReadMeshFileGmsh22(lines);
             this.Cells = new Cell[cellsJugArray.Length];
             for (int i = 0; i < cellsJugArray.Length; i++)
             {
@@ -61,6 +62,20 @@ namespace mesh_deformation
                         line[8]
                     };
                 }
+                else if (cell.CellType == CellType.Hexahedron)
+                {
+                    cell.NodesIndex = new int[]
+                    {
+                        line[5],
+                        line[6],
+                        line[7],
+                        line[8],
+                        line[9],
+                        line[10],
+                        line[11],
+                        line[12],
+                    };
+                }
                 else if (cell.CellType == CellType.Prism)
                 {
                     cell.NodesIndex = new int[]
@@ -79,20 +94,7 @@ namespace mesh_deformation
             }
         }
 
-        public void CalculateUpdatePoints(List<float[,]> matrixs, float[] nodes)
-        {
-            this.UpdatedNodes = new float[this.Nodes.Length];
-            for (int i = 0; i < nodes.Length / 3; i++)
-            {
-                var oriXYZ = new float[] { nodes[i * 3 + 0], nodes[i * 3 + 1], nodes[i * 3 + 2], 1f };
-                var updatedXYZ = HairetsuExtensions.MultipleMatVec(matrixs[1], oriXYZ);
-                this.UpdatedNodes[i * 3 + 0] = updatedXYZ[0];
-                this.UpdatedNodes[i * 3 + 1] = updatedXYZ[1];
-                this.UpdatedNodes[i * 3 + 2] = updatedXYZ[2];
-            }
-        }
-
-        private (float[], int[][], List<PhysicalInfo>) InterpretLinesOnMesh(string[] lines)
+        private (int[][], List<PhysicalInfo>) ReadMeshFileGmsh22(string[] lines)
         {
             float[] nodes = null;
             int[][] elements = null;
@@ -131,14 +133,20 @@ namespace mesh_deformation
                     //Debug.WriteLine($"Nodes");
                     currentLine += 1;
                     var nodesNumber = int.Parse(lines[currentLine]);
-                    nodes = new float[nodesNumber * 3];
+                    this.NodesOrigin = new Node[nodesNumber];
                     for (int index = 0; index < nodesNumber; index++)
                     {
                         currentLine += 1;
                         string[] cols = lines[currentLine].Split(" ");
-                        nodes[(3 * index) + 0] = float.Parse(cols[1]); //x
-                        nodes[(3 * index) + 1] = float.Parse(cols[2]); //y
-                        nodes[(3 * index) + 2] = float.Parse(cols[3]); //z
+                        var node = new Node()
+                        {
+                            Index = index,
+                            X = float.Parse(cols[1]),
+                            Y = float.Parse(cols[2]),
+                            Z = float.Parse(cols[3]),
+                            Angle = (float)(Math.PI /16.0) * float.Parse(cols[3]) * 0.1f,
+                        };
+                        this.NodesOrigin[index] = node;
                     }
                 }
                 else if (lines[currentLine] == "$Elements")
@@ -165,7 +173,7 @@ namespace mesh_deformation
             {
                 //Debug.WriteLine("No ---------------");
             }
-            return (nodes, elements, physicalInfos);
+            return (elements, physicalInfos);
         }
     }
 }

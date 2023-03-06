@@ -42,16 +42,16 @@ namespace mesh_deformation
             Mesh mesh = new Mesh(lines);
             program.Mesh = mesh;
 
-
-            for (int i = 0; i < program.Mesh.Nodes.Length / 3; i++)
+            foreach (var node in program.Mesh.NodesOrigin )
             {
-                Debug.WriteLine($"{mesh.Nodes[i * 3 + 0]}, {mesh.Nodes[i * 3 + 1]}, {mesh.Nodes[i * 3 + 2]}");
+                Debug.WriteLine($"{node.Index}, ({node.X}, {node.Y}, {node.Z})");
             }
 
-            var reference = new Reference();
-            mesh.CalculateUpdatePoints(reference.Matrixs, program.Mesh.Nodes);
+            var reference = new Reference(mesh.NodesOrigin);
+
+            //mesh.CalculateUpdatePoints(reference.Matrixs, program.Mesh.Nodes);
             Output output;
-            output = new Output(program.Mesh, program.DirPath, thisOs);
+            output = new Output(program.Mesh, program.DirPath, thisOs, reference);
 
 
             //var matA = new float[,] {

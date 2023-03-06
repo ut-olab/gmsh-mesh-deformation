@@ -38,8 +38,16 @@ field.add("MathEval", 1)
 field.setString(1, "F", "0.01*(1.0+30.*(y-x*x)*(y-x*x) + (1-x)*(1-x))")
 field.setAsBackgroundMesh(1)
 
+bottomPlane = [(2, 1)]
+gmsh.model.geo.extrude(dimTags=bottomPlane, dx=0, dy=0, dz=1, numElements=[2])
+gmsh.model.geo.synchronize()
+
 # To generate quadrangles instead of triangles, we can simply add
 gmsh.model.mesh.setRecombine(2, pl)
+
+# bottomPlane = [(2, 1)]
+# gmsh.model.geo.extrude(dimTags=bottomPlane, dx=0, dy=0, dz=1, numElements=[2])
+# gmsh.model.geo.synchronize()
 
 # If we'd had several surfaces, we could have used the global option
 # "Mesh.RecombineAll":
@@ -79,7 +87,7 @@ gmsh.model.mesh.setRecombine(2, pl)
 #
 # gmsh.option.setNumber("Mesh.SubdivisionAlgorithm", 1)
 
-gmsh.model.mesh.generate(2)
+gmsh.model.mesh.generate(3)
 
 # Note that you could also apply the recombination algorithm and/or the
 # subdivision step explicitly after meshing, as follows:
