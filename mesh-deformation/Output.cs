@@ -49,7 +49,6 @@ namespace mesh_deformation
                         sw.WriteLine($"2 {physical.PhysicalID} \"{physical.PhysicalName}\"");
                     }
                 }
-                sw.WriteLine($"2 10 \"surface\"");
                 sw.WriteLine("$EndPhysicalNames");
                 sw.WriteLine("$Nodes");
                 sw.WriteLine($"{reference.NodeMoved.Length}");

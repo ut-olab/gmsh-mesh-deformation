@@ -25,7 +25,7 @@ gmsh.option.setNumber("General.RotationZ", 0)
 gmsh.option.setNumber("General.Terminal", 1)
 
 radius = 0.5
-lengthLongitudinal = 1.0
+lengthLongitudinal = 10.0
 
 divideRadius = 31
 divideArc = 15

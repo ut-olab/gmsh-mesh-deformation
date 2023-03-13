@@ -13,6 +13,9 @@ namespace mesh_deformation
         public float X { get; set; }
         public float Y { get; set; }
         public float Z { get; set; }
+        public float XOri { get; set; }
+        public float YOri { get; set; }
+        public float ZOri { get; set; }
         public float Angle { get; set; }
         public Vector3 Destination { get; set; }
         public float[,] RotationMatrix { get; set; }

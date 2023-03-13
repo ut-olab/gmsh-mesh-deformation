@@ -398,6 +398,9 @@ FodyWeavers.xsd
 *.sln.iml
 
 
+
+.gmsh-mesh-deformation
+
 *.msh
 *.vtk
 

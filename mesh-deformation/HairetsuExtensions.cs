@@ -14,52 +14,78 @@ namespace mesh_deformation
     // https://qiita.com/baba_s/items/807523551a0c79e6a3c2
     public static class HairetsuExtensions
     {
+        /// <summary>
+        /// output vector
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="vec"></param>
+        public static void PrintVec<T>(
+            this T[] vec
+        )
+        {
+            Debug.WriteLine($"---------------------");
+            int row = vec.Length;
+            for (int m = 0; m < vec.Length; m++)
+            {
+                Debug.WriteLine($"{vec[m]}");
+            }
+        }
+
 
         /// <summary>
-        /// 行列を表示するメソッド
+        /// output matrix
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="mat"></param>
         public static void PrintMat<T>(
             this T[,] mat
-            )
+        )
         {
             Debug.WriteLine($"---------------------");
-            Debug.WriteLine($"{mat.GetType()}, {mat.GetLength(0)} {mat.GetLength(1)}");
-            for (int m = 0; m < mat.GetLength(0); m++)
+            int row = mat.GetLength(0);
+            int col = mat.GetLength(1);
+            Debug.WriteLine($"{mat.GetType()}, {row} {col}");
+            for (int m = 0; m < row; m++)
             {
-                for (int n = 0; n < mat.GetLength(1); n++)
+                for (int n = 0; n < col; n++)
                 {
                     Debug.Write($"{mat[m, n]} ");
                 }
                 Debug.WriteLine("");
             }
         }
-        public static void PrintVec<T>(
-            this T[] vec
+        
+        public static T[] AddVec<T>(
+            T[] vecA,
+            T[] vecB
             )
+            where T : INumber<T>
         {
-            Debug.WriteLine($"---------------------");
-            for (int i = 0; i < vec.Length; i++)
+            ConfirmationVec(vecA, vecB);
+            int row = vecA.GetLength(0);
+            var resVec = new T[row];
+            for (int m = 0; m < row; m++)
             {
-                Debug.WriteLine($"{vec[i]}");
+                resVec[m] = vecA[m] + vecB[m];
             }
+            return resVec;
         }
 
-        
         public static T[,] AddMat<T>(
             T[,] matA,
             T[,] matB
             )
              where T : INumber<T>
         {
-            Confirmation(matA, matB);
-            var matRes = new T[matA.GetLength(0), matB.GetLength(1)];
-            for (int i = 0; i < matA.GetLength(0); i++)
+            ConfirmationMat(matA, matB);
+            int row = matA.GetLength(0);
+            int col = matA.GetLength(1);
+            var matRes = new T[row, col];
+            for (int m = 0; m < row; m++)
             {
-                for (int j = 0; j < matA.GetLength(1); j++)
+                for (int n = 0; n < col; n++)
                 {
-                    matRes[i, j] = matA[i, j] + matB[i, j];
+                    matRes[m, n] = matA[m, n] + matB[m, n];
                 }
             }
             return matRes;
@@ -71,14 +97,17 @@ namespace mesh_deformation
             )
             where T : INumber<T>
         {
-            var matRes = new T[matA.GetLength(0), matB.GetLength(1)];
-            for (int i = 0; i < matA.GetLength(0); i++)
+            ConfirmationMat(matA, matB);
+            int row = matA.GetLength(0);
+            int col = matA.GetLength(1);
+            var matRes = new T[row, col];
+            for (int m = 0; m < row; m++)
             {
-                for (int j = 0; j < matA.GetLength(1); j++)
+                for (int n = 0; n < col; n++)
                 {
-                    for (int k = 0; k < matA.GetLength(0); k++)
+                    for (int l = 0; l < row; l++)
                     {
-                        matRes[i, j] += matA[i, k] * matB[k, j];
+                        matRes[m, n] += matA[m, l] * matB[l, n];
                     }
                 }
             }
@@ -121,13 +150,18 @@ namespace mesh_deformation
             return vecRes;
         }
 
-
-
-        public static void Confirmation<T>(T[,] matA, T[,] matB)
+        public static void ConfirmationVec<T>(T[] vecA, T[] vecB)
+        {
+            if (vecA.GetLength(0) != vecB.GetLength(0))
+            {
+                throw new ArgumentException("足し算するvectorの要素数が異なるよ");
+            }
+        }
+        public static void ConfirmationMat<T>(T[,] matA, T[,] matB)
         {
             if (matA.GetLength(0) != matB.GetLength(0) || matA.GetLength(1) != matB.GetLength(1))
             {
-                throw new ArgumentException("足し算する配列の要素数が異なるよ");
+                throw new ArgumentException("足し算するmatrixの要素数が異なるよ");
             }
         }
     }

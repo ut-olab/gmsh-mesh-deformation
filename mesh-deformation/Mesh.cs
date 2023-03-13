@@ -144,6 +144,9 @@ namespace mesh_deformation
                             X = float.Parse(cols[1]),
                             Y = float.Parse(cols[2]),
                             Z = float.Parse(cols[3]),
+                            XOri= float.Parse(cols[1]),
+                            YOri= float.Parse(cols[2]),
+                            ZOri= float.Parse(cols[3]),
                             Angle = (float)(Math.PI /16.0) * float.Parse(cols[3]) * 0.1f,
                         };
                         this.NodesOrigin[index] = node;

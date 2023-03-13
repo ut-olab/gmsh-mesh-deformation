@@ -42,10 +42,6 @@ namespace mesh_deformation
             Mesh mesh = new Mesh(lines);
             program.Mesh = mesh;
 
-            foreach (var node in program.Mesh.NodesOrigin )
-            {
-                Debug.WriteLine($"{node.Index}, ({node.X}, {node.Y}, {node.Z})");
-            }
 
             var reference = new Reference(mesh.NodesOrigin);
 
@@ -70,7 +66,6 @@ namespace mesh_deformation
             //add.Print();
             //var mul = HairetsuExtensions.Multiple(matA, matB);
             //mul.Print();
-
 
             var mat = new float[,] {
                 {1, 2, 3 },
