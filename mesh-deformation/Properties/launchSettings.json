@@ -2,7 +2,7 @@
   "profiles": {
     "mesh-deformation": {
       "commandName": "Project",
-      "commandLineArgs": "C:\\Users\\imainaoya\\github-tokyo\\gmsh-mesh-deformation\\pipe-structured\\pipe-structured.msh"
+      "commandLineArgs": "C:\\Users\\imai\\Documents\\github-tokyo\\gmsh-mesh-deformation\\pipe-structured\\pipe-structured.msh"
     }
   }
 }

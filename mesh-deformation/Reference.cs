@@ -41,7 +41,7 @@ namespace mesh_deformation
                     this.NodeOrigin[index].Y,
                     this.NodeOrigin[index].Z,
                 };
-                HairetsuExtensions.PrintVec(xyz);
+                //HairetsuExtensions.PrintVec(xyz);
                 float[] delta1 = new float[3]
                 {
                     0.0f,
@@ -51,12 +51,14 @@ namespace mesh_deformation
                 float[] delta2 = new float[3]
                 {
                     0.0f,
-                    -(float)Math.Pow((this.NodeOrigin[index].Z * 0.1f), 2),
+                    //-(float)Math.Pow((this.NodeOrigin[index].Z * 0.1f), 2),
+                    -(float)Math.Sin(this.NodeOrigin[index].Z * 0.5f),
                     this.NodeOrigin[index].Z,
                 };
                 float angle = 5;
                 var shiftedPoint = CoordinateTransformer.Parallel(xyz, delta1);
-                var rotatePoint = CoordinateTransformer.RotateX(shiftedPoint, angle * this.NodeOrigin[index].Z);
+                //var rotatePoint = CoordinateTransformer.RotateX(shiftedPoint, angle * this.NodeOrigin[index].Z);
+                var rotatePoint = CoordinateTransformer.RotateX(shiftedPoint, (float)Math.Cos(this.NodeOrigin[index].Z * 0.5f));
                 var res = CoordinateTransformer.Parallel(rotatePoint, delta2);
                 var node = new Node()
                 {
